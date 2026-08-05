@@ -1,6 +1,7 @@
 "use client";
 
-import { Fragment, useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { Button, Card, Field, Select, TextArea, TextInput } from "@/components/ui";
 
 const STATUS_OPTIONS = [
   "Applied",
@@ -105,78 +106,82 @@ export default function TrackerPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">Application Tracker</h1>
           <p className="text-zinc-500 dark:text-zinc-400 mt-1">
             Everything you&apos;ve applied to, in one place.
           </p>
         </div>
-        <button
-          onClick={() => setShowAddForm((s) => !s)}
-          className="rounded-md bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 px-4 py-2 text-sm font-medium"
-        >
+        <Button onClick={() => setShowAddForm((s) => !s)} fullWidth className="sm:w-auto shrink-0">
           {showAddForm ? "Cancel" : "+ Add manually"}
-        </button>
+        </Button>
       </div>
 
       {showAddForm && (
-        <section className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-5">
+        <Card>
           <h2 className="font-medium mb-3">Add application manually</h2>
           <div className="grid sm:grid-cols-2 gap-3">
-            <Field label="Company *" value={form.company} onChange={(v) => setField("company", v)} />
-            <Field label="Position *" value={form.position} onChange={(v) => setField("position", v)} />
-            <Field label="Industry" value={form.industry} onChange={(v) => setField("industry", v)} />
-            <Field label="Compensation" value={form.compensation} onChange={(v) => setField("compensation", v)} />
-            <Field label="Location" value={form.location} onChange={(v) => setField("location", v)} />
-            <Field
-              label="Date applied"
-              type="date"
-              value={form.dateApplied}
-              onChange={(v) => setField("dateApplied", v)}
-            />
-            <div>
-              <label className="text-xs text-zinc-500 block mb-1">Status</label>
-              <select
-                value={form.status}
-                onChange={(e) => setField("status", e.target.value)}
-                className="w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent p-2 text-sm"
-              >
+            <Field label="Company *">
+              <TextInput value={form.company} onChange={(e) => setField("company", e.target.value)} />
+            </Field>
+            <Field label="Position *">
+              <TextInput value={form.position} onChange={(e) => setField("position", e.target.value)} />
+            </Field>
+            <Field label="Industry">
+              <TextInput value={form.industry} onChange={(e) => setField("industry", e.target.value)} />
+            </Field>
+            <Field label="Compensation">
+              <TextInput value={form.compensation} onChange={(e) => setField("compensation", e.target.value)} />
+            </Field>
+            <Field label="Location">
+              <TextInput value={form.location} onChange={(e) => setField("location", e.target.value)} />
+            </Field>
+            <Field label="Date applied">
+              <TextInput
+                type="date"
+                value={form.dateApplied}
+                onChange={(e) => setField("dateApplied", e.target.value)}
+              />
+            </Field>
+            <Field label="Status">
+              <Select value={form.status} onChange={(e) => setField("status", e.target.value)}>
                 {STATUS_OPTIONS.map((s) => (
                   <option key={s} value={s}>
                     {s}
                   </option>
                 ))}
-              </select>
-            </div>
-            <Field label="Posting link" value={form.postingLink} onChange={(v) => setField("postingLink", v)} />
+              </Select>
+            </Field>
+            <Field label="Posting link">
+              <TextInput
+                value={form.postingLink}
+                onChange={(e) => setField("postingLink", e.target.value)}
+                inputMode="url"
+                autoCapitalize="none"
+                autoCorrect="off"
+              />
+            </Field>
           </div>
           <div className="mt-3">
-            <label className="text-xs text-zinc-500 block mb-1">Summary</label>
-            <textarea
-              value={form.summary}
-              onChange={(e) => setField("summary", e.target.value)}
-              className="w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent p-2 text-sm min-h-[70px]"
-              placeholder="Short summary of the role, in case the posting link expires…"
-            />
+            <Field label="Summary">
+              <TextArea
+                value={form.summary}
+                onChange={(e) => setField("summary", e.target.value)}
+                placeholder="Short summary of the role, in case the posting link expires…"
+              />
+            </Field>
           </div>
           <div className="mt-3">
-            <label className="text-xs text-zinc-500 block mb-1">Notes</label>
-            <textarea
-              value={form.notes}
-              onChange={(e) => setField("notes", e.target.value)}
-              className="w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent p-2 text-sm min-h-[50px]"
-            />
+            <Field label="Notes">
+              <TextArea value={form.notes} onChange={(e) => setField("notes", e.target.value)} className="min-h-16" />
+            </Field>
           </div>
           {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
-          <button
-            onClick={submitAdd}
-            disabled={saving}
-            className="mt-3 rounded-md bg-emerald-600 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
-          >
+          <Button onClick={submitAdd} disabled={saving} fullWidth className="mt-3 sm:w-auto">
             {saving ? "Saving…" : "Save application"}
-          </button>
-        </section>
+          </Button>
+        </Card>
       )}
 
       {loading ? (
@@ -186,130 +191,109 @@ export default function TrackerPage() {
           No applications tracked yet. Analyze a posting or add one manually.
         </p>
       ) : (
-        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-zinc-50 dark:bg-zinc-900 text-left text-xs uppercase text-zinc-500">
-              <tr>
-                <th className="px-3 py-2">Company</th>
-                <th className="px-3 py-2">Position</th>
-                <th className="px-3 py-2">Industry</th>
-                <th className="px-3 py-2">Compensation</th>
-                <th className="px-3 py-2">Date applied</th>
-                <th className="px-3 py-2">Status</th>
-                <th className="px-3 py-2"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-              {applications.map((app) => (
-                <Fragment key={app.id}>
-                  <tr className="align-top">
-                    <td className="px-3 py-2 font-medium">{app.company}</td>
-                    <td className="px-3 py-2">{app.position}</td>
-                    <td className="px-3 py-2 text-zinc-500">{app.industry || "—"}</td>
-                    <td className="px-3 py-2 text-zinc-500">{app.compensation || "—"}</td>
-                    <td className="px-3 py-2 text-zinc-500">
-                      {new Date(app.dateApplied).toLocaleDateString()}
-                    </td>
-                    <td className="px-3 py-2">
-                      <select
-                        value={app.status}
-                        onChange={(e) => updateStatus(app.id, e.target.value)}
-                        className="rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent p-1 text-xs"
-                      >
-                        {STATUS_OPTIONS.map((s) => (
-                          <option key={s} value={s}>
-                            {s}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="px-3 py-2 whitespace-nowrap">
-                      <button
-                        onClick={() => setExpandedId(expandedId === app.id ? null : app.id)}
-                        className="text-xs text-zinc-500 hover:underline mr-3"
-                      >
-                        {expandedId === app.id ? "Hide" : "Details"}
-                      </button>
-                      <button
-                        onClick={() => deleteApplication(app.id)}
-                        className="text-xs text-red-600 hover:underline"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                  {expandedId === app.id && (
-                    <tr>
-                      <td colSpan={7} className="px-3 py-3 bg-zinc-50 dark:bg-zinc-900 text-sm">
-                        <div className="flex flex-col gap-1">
-                          {app.location && (
-                            <div>
-                              <span className="font-medium">Location: </span>
-                              {app.location}
-                            </div>
-                          )}
-                          {app.postingLink && (
-                            <div>
-                              <span className="font-medium">Posting link: </span>
-                              <a
-                                href={app.postingLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 hover:underline break-all"
-                              >
-                                {app.postingLink}
-                              </a>
-                            </div>
-                          )}
-                          {app.summary && (
-                            <div>
-                              <span className="font-medium">Summary: </span>
-                              {app.summary}
-                            </div>
-                          )}
-                          {app.notes && (
-                            <div>
-                              <span className="font-medium">Notes: </span>
-                              {app.notes}
-                            </div>
-                          )}
-                          <div className="text-xs text-zinc-400 mt-1">
-                            Source: {app.source === "analyzer" ? "Analyzed posting" : "Manual entry"}
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </Fragment>
-              ))}
-            </tbody>
-          </table>
+        <div className="flex flex-col gap-3">
+          {applications.map((app) => (
+            <ApplicationCard
+              key={app.id}
+              app={app}
+              expanded={expandedId === app.id}
+              onToggleExpand={() => setExpandedId(expandedId === app.id ? null : app.id)}
+              onStatusChange={(status) => updateStatus(app.id, status)}
+              onDelete={() => deleteApplication(app.id)}
+            />
+          ))}
         </div>
       )}
     </div>
   );
 }
 
-function Field({
-  label,
-  value,
-  onChange,
-  type = "text",
+function ApplicationCard({
+  app,
+  expanded,
+  onToggleExpand,
+  onStatusChange,
+  onDelete,
 }: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  type?: string;
+  app: Application;
+  expanded: boolean;
+  onToggleExpand: () => void;
+  onStatusChange: (status: string) => void;
+  onDelete: () => void;
 }) {
   return (
-    <div>
-      <label className="text-xs text-zinc-500 block mb-1">{label}</label>
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent p-2 text-sm"
-      />
-    </div>
+    <Card className="flex flex-col gap-3">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="font-medium break-words">{app.position}</div>
+          <div className="text-sm text-zinc-500 dark:text-zinc-400 break-words">{app.company}</div>
+        </div>
+        <Select
+          value={app.status}
+          onChange={(e) => onStatusChange(e.target.value)}
+          className="w-auto shrink-0 py-2 text-sm min-h-9"
+        >
+          {STATUS_OPTIONS.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </Select>
+      </div>
+
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-zinc-500 dark:text-zinc-400">
+        <span>{new Date(app.dateApplied).toLocaleDateString()}</span>
+        {app.industry && <span>{app.industry}</span>}
+        {app.compensation && <span className="break-words">{app.compensation}</span>}
+      </div>
+
+      {expanded && (
+        <div className="flex flex-col gap-2 text-sm pt-2 border-t border-zinc-200 dark:border-zinc-800">
+          {app.location && (
+            <div>
+              <span className="font-medium">Location: </span>
+              {app.location}
+            </div>
+          )}
+          {app.postingLink && (
+            <div className="break-all">
+              <span className="font-medium">Posting link: </span>
+              <a
+                href={app.postingLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline"
+              >
+                {app.postingLink}
+              </a>
+            </div>
+          )}
+          {app.summary && (
+            <div className="break-words">
+              <span className="font-medium">Summary: </span>
+              {app.summary}
+            </div>
+          )}
+          {app.notes && (
+            <div className="break-words">
+              <span className="font-medium">Notes: </span>
+              {app.notes}
+            </div>
+          )}
+          <div className="text-xs text-zinc-400">
+            Source: {app.source === "analyzer" ? "Analyzed posting" : "Manual entry"}
+          </div>
+        </div>
+      )}
+
+      <div className="flex gap-4 pt-1">
+        <button onClick={onToggleExpand} className="text-sm text-zinc-500 underline min-h-9">
+          {expanded ? "Hide details" : "Details"}
+        </button>
+        <button onClick={onDelete} className="text-sm text-red-600 underline min-h-9">
+          Delete
+        </button>
+      </div>
+    </Card>
   );
 }

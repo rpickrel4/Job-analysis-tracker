@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { INTERVIEW_CATEGORIES, INTERVIEW_QUESTIONS } from "@/lib/interviewQuestions";
 import type { CandidateProfileJson } from "@/lib/types";
+import { Button, Card, Label, TextArea } from "@/components/ui";
 
 type QuestionWithAnswer = (typeof INTERVIEW_QUESTIONS)[number] & { answer: string };
 
@@ -91,7 +92,7 @@ export default function ProfilePage() {
   const answeredCount = questions.filter((q) => q.answer?.trim()).length;
 
   return (
-    <div className="flex flex-col gap-10 max-w-3xl">
+    <div className="flex flex-col gap-6 max-w-3xl">
       <div>
         <h1 className="text-2xl font-semibold">My Profile</h1>
         <p className="text-zinc-500 dark:text-zinc-400 mt-1">
@@ -100,13 +101,13 @@ export default function ProfilePage() {
         </p>
       </div>
 
-      <section className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-5">
+      <Card>
         <h2 className="font-medium mb-2">Resume</h2>
         <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-3">
           PDF, DOCX, or TXT. We extract the text and use it alongside your interview answers.
         </p>
-        <div className="flex items-center gap-3">
-          <label className="cursor-pointer rounded-md bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 px-4 py-2 text-sm font-medium">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+          <label className="cursor-pointer inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 min-h-11 text-base font-medium bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 active:opacity-80">
             {resumeUploading ? "Uploading…" : resumeFileName ? "Replace resume" : "Upload resume"}
             <input
               type="file"
@@ -117,16 +118,16 @@ export default function ProfilePage() {
             />
           </label>
           {resumeFileName && (
-            <span className="text-sm text-zinc-500 dark:text-zinc-400">{resumeFileName}</span>
+            <span className="text-sm text-zinc-500 dark:text-zinc-400 break-all">{resumeFileName}</span>
           )}
         </div>
         {resumeError && <p className="text-sm text-red-600 mt-2">{resumeError}</p>}
-      </section>
+      </Card>
 
-      <section className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-5">
-        <div className="flex items-center justify-between mb-4">
+      <Card>
+        <div className="flex items-center justify-between mb-4 gap-3">
           <h2 className="font-medium">Interview</h2>
-          <span className="text-sm text-zinc-500">
+          <span className="text-sm text-zinc-500 shrink-0">
             {answeredCount}/{questions.length} answered
           </span>
         </div>
@@ -146,12 +147,11 @@ export default function ProfilePage() {
                   <div className="flex flex-col gap-4">
                     {categoryQuestions.map((q) => (
                       <div key={q.id}>
-                        <label className="text-sm font-medium block mb-1">{q.question}</label>
+                        <Label>{q.question}</Label>
                         {q.helperText && (
-                          <p className="text-xs text-zinc-500 mb-1">{q.helperText}</p>
+                          <p className="text-xs text-zinc-500 mb-1.5 -mt-1">{q.helperText}</p>
                         )}
-                        <textarea
-                          className="w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent p-2 text-sm min-h-[70px]"
+                        <TextArea
                           value={q.answer}
                           onChange={(e) => updateAnswerLocally(q.id, e.target.value)}
                           onBlur={(e) => saveAnswer(q.id, e.target.value)}
@@ -168,18 +168,14 @@ export default function ProfilePage() {
             })}
           </div>
         )}
-      </section>
+      </Card>
 
-      <section className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-5">
-        <div className="flex items-center justify-between mb-3">
+      <Card>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
           <h2 className="font-medium">Synthesized Profile</h2>
-          <button
-            onClick={handleSynthesize}
-            disabled={synthesizing}
-            className="rounded-md bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 px-4 py-2 text-sm font-medium disabled:opacity-50"
-          >
+          <Button onClick={handleSynthesize} disabled={synthesizing}>
             {synthesizing ? "Building…" : profileJson ? "Rebuild profile" : "Build profile"}
-          </button>
+          </Button>
         </div>
         <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-3">
           Uses AI to combine your resume and interview answers into the profile used for job fit
@@ -206,7 +202,7 @@ export default function ProfilePage() {
             click &quot;Build profile&quot;.
           </p>
         )}
-      </section>
+      </Card>
     </div>
   );
 }
@@ -214,7 +210,7 @@ export default function ProfilePage() {
 function ProfileField({ label, items }: { label: string; items: string[] }) {
   if (!items || items.length === 0) return null;
   return (
-    <div>
+    <div className="break-words">
       <span className="font-medium">{label}: </span>
       <span className="text-zinc-600 dark:text-zinc-400">{items.join(", ")}</span>
     </div>
@@ -224,7 +220,7 @@ function ProfileField({ label, items }: { label: string; items: string[] }) {
 function ProfileText({ label, text }: { label: string; text: string }) {
   if (!text) return null;
   return (
-    <div>
+    <div className="break-words">
       <span className="font-medium">{label}: </span>
       <span className="text-zinc-600 dark:text-zinc-400">{text}</span>
     </div>

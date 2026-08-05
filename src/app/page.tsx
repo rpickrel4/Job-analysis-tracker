@@ -57,7 +57,7 @@ export default async function Home() {
       </div>
 
       {!hasSynthesizedProfile && (
-        <div className="rounded-lg border border-amber-300 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/40 p-4 text-sm text-amber-900 dark:text-amber-200">
+        <div className="rounded-2xl border border-amber-300 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/40 p-4 text-sm text-amber-900 dark:text-amber-200">
           Upload your resume and answer a few interview questions on the{" "}
           <Link href="/profile" className="underline font-medium">
             My Profile
@@ -78,18 +78,18 @@ export default async function Home() {
             Nothing tracked yet. Analyze a posting or add one manually to get started.
           </p>
         ) : (
-          <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 divide-y divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
+          <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 divide-y divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
             {applications.map((app) => (
-              <div key={app.id} className="flex items-center justify-between px-4 py-3 text-sm">
-                <div>
-                  <div className="font-medium">
+              <div key={app.id} className="flex items-center justify-between gap-3 px-4 py-3 text-sm">
+                <div className="min-w-0">
+                  <div className="font-medium truncate">
                     {app.position} @ {app.company}
                   </div>
                   <div className="text-zinc-500 dark:text-zinc-400">
                     {new Date(app.dateApplied).toLocaleDateString()}
                   </div>
                 </div>
-                <span className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-3 py-1 text-xs font-medium">
+                <span className="shrink-0 rounded-full bg-zinc-100 dark:bg-zinc-800 px-3 py-1 text-xs font-medium">
                   {app.status}
                 </span>
               </div>
@@ -105,11 +105,11 @@ function Card(props: { title: string; value: string; detail: string; href: strin
   return (
     <Link
       href={props.href}
-      className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-4 flex flex-col gap-1 hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors"
+      className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-4 flex flex-col gap-1 active:bg-zinc-50 dark:active:bg-zinc-900 transition-colors min-h-11"
     >
       <span className="text-xs uppercase tracking-wide text-zinc-500">{props.title}</span>
-      <span className="text-xl font-semibold">{props.value}</span>
-      <span className="text-xs text-zinc-500 dark:text-zinc-400">{props.detail}</span>
+      <span className="text-xl font-semibold break-words">{props.value}</span>
+      <span className="text-xs text-zinc-500 dark:text-zinc-400 break-words">{props.detail}</span>
       <span className="text-sm text-zinc-900 dark:text-zinc-100 font-medium mt-2">
         {props.cta} →
       </span>

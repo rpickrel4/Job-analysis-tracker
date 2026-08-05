@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { JobAnalysisJson } from "@/lib/types";
+import { Button, Card, Field, TextArea, TextInput } from "@/components/ui";
 
 type AnalyzeResult = {
   jobAnalysis: { id: number };
@@ -122,56 +123,59 @@ export default function AnalyzePage() {
         </p>
       </div>
 
-      <section className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-5 flex flex-col gap-3">
-        <label className="text-sm font-medium">Posting URL</label>
-        <input
-          type="url"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder="https://www.linkedin.com/jobs/view/..."
-          className="w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent p-2 text-sm"
-        />
+      <Card className="flex flex-col gap-3">
+        <Field label="Posting URL">
+          <TextInput
+            type="url"
+            inputMode="url"
+            autoCapitalize="none"
+            autoCorrect="off"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="https://www.linkedin.com/jobs/view/..."
+          />
+        </Field>
 
         {!showPasteBox && (
           <button
             type="button"
             onClick={() => setShowPasteBox(true)}
-            className="text-xs text-zinc-500 hover:underline self-start"
+            className="text-sm text-zinc-500 underline self-start min-h-11 flex items-center"
           >
             + Paste description text instead / as well
           </button>
         )}
 
         {showPasteBox && (
-          <div>
-            <label className="text-sm font-medium block mb-1">Job description text</label>
-            <textarea
+          <Field label="Job description text">
+            <TextArea
               value={pastedText}
               onChange={(e) => setPastedText(e.target.value)}
               placeholder="Paste the full job posting text here…"
-              className="w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent p-2 text-sm min-h-[160px]"
+              className="min-h-40"
             />
-          </div>
+          </Field>
         )}
 
-        <button
+        <Button
           onClick={runAnalysis}
           disabled={loading || (!url.trim() && !pastedText.trim())}
-          className="self-start rounded-md bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 px-4 py-2 text-sm font-medium disabled:opacity-50"
+          fullWidth
+          className="sm:w-auto sm:self-start"
         >
           {loading ? "Analyzing…" : "Analyze"}
-        </button>
+        </Button>
         {error && <p className="text-sm text-red-600">{error}</p>}
-      </section>
+      </Card>
 
       {analysis && (
-        <section className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-5 flex flex-col gap-5">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h2 className="text-lg font-semibold">
+        <Card className="flex flex-col gap-5">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h2 className="text-lg font-semibold break-words">
                 {analysis.position.title || "Untitled position"}
               </h2>
-              <p className="text-zinc-500 dark:text-zinc-400">
+              <p className="text-zinc-500 dark:text-zinc-400 break-words">
                 {analysis.company.name || "Unknown company"}
                 {analysis.company.industry ? ` · ${analysis.company.industry}` : ""}
               </p>
@@ -222,15 +226,12 @@ export default function AnalyzePage() {
                 error={applyError}
               />
             ) : (
-              <button
-                onClick={openApplyForm}
-                className="rounded-md bg-emerald-600 text-white px-4 py-2 text-sm font-medium"
-              >
+              <Button onClick={openApplyForm} variant="success" fullWidth className="sm:w-auto">
                 Mark as Applied
-              </button>
+              </Button>
             )}
           </div>
-        </section>
+        </Card>
       )}
 
       {result && (
@@ -286,7 +287,7 @@ function AnalysisChat({
   }
 
   return (
-    <section className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-5 flex flex-col gap-4">
+    <Card className="flex flex-col gap-4">
       <div>
         <h2 className="font-medium">Ask about this role</h2>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -300,7 +301,7 @@ function AnalysisChat({
           {messages.map((m) => (
             <div
               key={m.id}
-              className={`max-w-[85%] rounded-lg px-3 py-2 text-sm whitespace-pre-wrap ${
+              className={`max-w-[88%] sm:max-w-[75%] rounded-2xl px-3.5 py-2.5 text-sm whitespace-pre-wrap break-words ${
                 m.role === "user"
                   ? "self-end bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
                   : "self-start bg-zinc-100 dark:bg-zinc-900"
@@ -313,27 +314,23 @@ function AnalysisChat({
       )}
 
       <div className="flex gap-2">
-        <input
+        <TextInput
           type="text"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") sendQuestion();
           }}
-          placeholder="Ask a question about this role…"
+          placeholder="Ask a question…"
           disabled={sending}
-          className="flex-1 rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent p-2 text-sm"
+          className="flex-1 min-w-0"
         />
-        <button
-          onClick={sendQuestion}
-          disabled={sending || !question.trim()}
-          className="rounded-md bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 px-4 py-2 text-sm font-medium disabled:opacity-50"
-        >
+        <Button onClick={sendQuestion} disabled={sending || !question.trim()} className="shrink-0 px-5">
           {sending ? "…" : "Send"}
-        </button>
+        </Button>
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}
-    </section>
+    </Card>
   );
 }
 
@@ -345,7 +342,7 @@ function FitScore({ score, verdict }: { score: number; verdict: string }) {
       ? "text-amber-600 border-amber-300"
       : "text-red-600 border-red-300";
   return (
-    <div className={`flex flex-col items-center justify-center rounded-lg border ${color} px-4 py-2 shrink-0`}>
+    <div className={`flex flex-row sm:flex-col items-center justify-center gap-2 sm:gap-0 rounded-xl border ${color} px-4 py-2 shrink-0 self-start`}>
       <span className="text-2xl font-bold">{score}</span>
       <span className="text-[11px] font-medium">{verdict}</span>
     </div>
@@ -354,9 +351,9 @@ function FitScore({ score, verdict }: { score: number; verdict: string }) {
 
 function InfoTile({ label, value }: { label: string; value: string | null }) {
   return (
-    <div className="rounded-md bg-zinc-50 dark:bg-zinc-900 p-2">
+    <div className="rounded-xl bg-zinc-50 dark:bg-zinc-900 p-2.5 min-w-0">
       <div className="text-[11px] uppercase text-zinc-500">{label}</div>
-      <div>{value || "—"}</div>
+      <div className="break-words">{value || "—"}</div>
     </div>
   );
 }
@@ -373,13 +370,13 @@ function ListSection({
   if (!items || items.length === 0) return null;
   const dot = tone === "positive" ? "text-emerald-500" : tone === "negative" ? "text-red-500" : "text-zinc-400";
   return (
-    <div>
+    <div className="min-w-0">
       <h3 className="text-sm font-semibold mb-1">{title}</h3>
       <ul className="text-sm flex flex-col gap-1">
         {items.map((item, i) => (
           <li key={i} className="flex gap-2">
-            <span className={dot}>•</span>
-            <span>{item}</span>
+            <span className={`${dot} shrink-0`}>•</span>
+            <span className="break-words min-w-0">{item}</span>
           </li>
         ))}
       </ul>
@@ -421,55 +418,34 @@ function ApplyForm({
     <div className="flex flex-col gap-3">
       <h3 className="font-medium text-sm">Confirm application details</h3>
       <div className="grid sm:grid-cols-2 gap-3">
-        <TextField label="Company" value={fields.company} onChange={(v) => set("company", v)} />
-        <TextField label="Position" value={fields.position} onChange={(v) => set("position", v)} />
-        <TextField label="Industry" value={fields.industry} onChange={(v) => set("industry", v)} />
-        <TextField label="Compensation" value={fields.compensation} onChange={(v) => set("compensation", v)} />
-        <TextField label="Location" value={fields.location} onChange={(v) => set("location", v)} />
-        <TextField
-          label="Date applied"
-          type="date"
-          value={fields.dateApplied}
-          onChange={(v) => set("dateApplied", v)}
-        />
+        <Field label="Company">
+          <TextInput value={fields.company} onChange={(e) => set("company", e.target.value)} />
+        </Field>
+        <Field label="Position">
+          <TextInput value={fields.position} onChange={(e) => set("position", e.target.value)} />
+        </Field>
+        <Field label="Industry">
+          <TextInput value={fields.industry} onChange={(e) => set("industry", e.target.value)} />
+        </Field>
+        <Field label="Compensation">
+          <TextInput value={fields.compensation} onChange={(e) => set("compensation", e.target.value)} />
+        </Field>
+        <Field label="Location">
+          <TextInput value={fields.location} onChange={(e) => set("location", e.target.value)} />
+        </Field>
+        <Field label="Date applied">
+          <TextInput type="date" value={fields.dateApplied} onChange={(e) => set("dateApplied", e.target.value)} />
+        </Field>
       </div>
-      <div className="flex gap-3">
-        <button
-          onClick={onSubmit}
-          disabled={submitting}
-          className="rounded-md bg-emerald-600 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
-        >
+      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+        <Button onClick={onSubmit} disabled={submitting} variant="success" fullWidth className="sm:w-auto">
           {submitting ? "Saving…" : "Confirm & Save"}
-        </button>
-        <button onClick={onCancel} className="text-sm text-zinc-500 hover:underline">
+        </Button>
+        <button onClick={onCancel} className="text-sm text-zinc-500 underline min-h-11">
           Cancel
         </button>
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}
-    </div>
-  );
-}
-
-function TextField({
-  label,
-  value,
-  onChange,
-  type = "text",
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  type?: string;
-}) {
-  return (
-    <div>
-      <label className="text-xs text-zinc-500 block mb-1">{label}</label>
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent p-2 text-sm"
-      />
     </div>
   );
 }
