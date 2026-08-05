@@ -1,4 +1,4 @@
-import { JSDOM } from "jsdom";
+import { parseHTML } from "linkedom";
 import { Readability } from "@mozilla/readability";
 
 export type FetchedPosting = {
@@ -51,8 +51,8 @@ export async function fetchPostingText(url: string): Promise<FetchedPosting> {
   }
 
   try {
-    const dom = new JSDOM(html, { url: parsed.toString() });
-    const reader = new Readability(dom.window.document);
+    const { document } = parseHTML(html, { location: parsed });
+    const reader = new Readability(document as unknown as Document);
     const article = reader.parse();
     const text = (article?.textContent ?? "").replace(/\n{3,}/g, "\n\n").trim();
 
