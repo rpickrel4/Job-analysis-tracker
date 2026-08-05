@@ -6,6 +6,10 @@ import { MissingApiKeyError } from "@/lib/anthropic";
 import type { CandidateProfileJson } from "@/lib/types";
 
 export const runtime = "nodejs";
+// Headless-browser rendering (the fallback for JS-rendered postings) can
+// take a while; request the longest execution window Vercel allows. Hobby
+// plan projects are capped lower than this regardless.
+export const maxDuration = 60;
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
