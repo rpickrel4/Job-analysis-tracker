@@ -1,5 +1,5 @@
 import mammoth from "mammoth";
-import { PDFParse } from "pdf-parse";
+import { extractText, getDocumentProxy } from "unpdf";
 
 /** Extracts plain text from an uploaded resume file (PDF, DOCX, or TXT). */
 export async function extractResumeText(
@@ -9,13 +9,12 @@ export async function extractResumeText(
   const ext = fileName.toLowerCase().split(".").pop();
 
   if (ext === "pdf") {
-    const parser = new PDFParse({ data: new Uint8Array(buffer) });
-    try {
-      const result = await parser.getText();
-      return result.text.trim();
-    } finally {
-      await parser.destroy();
-    }
+    // pdf-parse/pdfjs-dist's default worker setup doesn't resolve inside
+    // Next.js's serverless bundle, so we use unpdf, which bundles a
+    // worker-free build of pdf.js meant for exactly this environment.
+    const pdf = await getDocumentProxy(new Uint8Array(buffer));
+    const { text } = await extractText(pdf, { mergePages: true });
+    return text.trim();
   }
 
   if (ext === "docx") {
