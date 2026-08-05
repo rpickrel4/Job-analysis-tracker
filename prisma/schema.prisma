@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Singleton row (id always 1) holding the resume text and the AI-synthesized
+// candidate profile that gets reused as context for every job analysis.
+model Profile {
+  id              Int      @id @default(1)
+  resumeText      String?
+  resumeFileName  String?
+  profileJson     String? // structured JSON: skills, experience, goals, ambitions, sideBusiness, values, idealRole, dealBreakers
+  profileSummary  String? // short human-readable narrative summary
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// One row per interview question, keyed by a stable questionId from the
+// question bank in code. Upserted as the user answers/edits.
+model InterviewAnswer {
+  id         Int      @id @default(autoincrement())
+  questionId String   @unique
+  category   String
+  question   String
+  answer     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// A single "paste a link/text and analyze" run.
+model JobAnalysis {
+  id             Int           @id @default(autoincrement())
+  url            String?
+  rawText        String
+  company        String?
+  position       String?
+  industry       String?
+  location       String?
+  employmentType String?
+  compensation   String?
+  summary        String?
+  fitScore       Int?
+  analysisJson   String // full structured AI response, stringified JSON
+  createdAt      DateTime      @default(now())
+  applications   Application[]
+}
+
+model Application {
+  id            Int          @id @default(autoincrement())
+  company       String
+  position      String
+  industry      String?
+  compensation  String?
+  location      String?
+  dateApplied   DateTime
+  status        String       @default("Applied")
+  postingLink   String?
+  summary       String?
+  notes         String?
+  source        String       @default("manual") // "analyzer" | "manual"
+  jobAnalysisId Int?
+  jobAnalysis   JobAnalysis? @relation(fields: [jobAnalysisId], references: [id])
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
