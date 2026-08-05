@@ -23,14 +23,16 @@ export class MissingApiKeyError extends Error {
 
 export const CLAUDE_MODEL = "claude-sonnet-5";
 
+export type ChatTurn = { role: "user" | "assistant"; content: string };
+
 /**
- * Sends a single-turn prompt and extracts the text response. Anthropic
+ * Sends a multi-turn conversation and extracts the text response. Anthropic
  * sometimes wraps JSON answers in prose or code fences even when asked not
  * to, so callers that need JSON should parse with extractJson().
  */
-export async function askClaude(params: {
+export async function askClaudeConversation(params: {
   system: string;
-  prompt: string;
+  messages: ChatTurn[];
   maxTokens?: number;
 }): Promise<string> {
   const anthropic = getAnthropicClient();
@@ -38,10 +40,23 @@ export async function askClaude(params: {
     model: CLAUDE_MODEL,
     max_tokens: params.maxTokens ?? 4096,
     system: params.system,
-    messages: [{ role: "user", content: params.prompt }],
+    messages: params.messages,
   });
   const textBlock = response.content.find((block) => block.type === "text");
   return textBlock && "text" in textBlock ? textBlock.text : "";
+}
+
+/** Sends a single-turn prompt. See askClaudeConversation() for details. */
+export async function askClaude(params: {
+  system: string;
+  prompt: string;
+  maxTokens?: number;
+}): Promise<string> {
+  return askClaudeConversation({
+    system: params.system,
+    messages: [{ role: "user", content: params.prompt }],
+    maxTokens: params.maxTokens,
+  });
 }
 
 /** Pulls the first JSON object/array out of a model response. */

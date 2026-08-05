@@ -1,4 +1,4 @@
-import { askClaude, extractJson } from "./anthropic";
+import { askClaude, askClaudeConversation, extractJson, type ChatTurn } from "./anthropic";
 import type { CandidateProfileJson, JobAnalysisJson } from "./types";
 import type { InterviewAnswer } from "@prisma/client";
 
@@ -93,4 +93,36 @@ Respond with ONLY a JSON object matching this exact shape (no markdown fences, n
   });
 
   return extractJson<JobAnalysisJson>(response);
+}
+
+/** Answers a free-form follow-up question about an already-analyzed posting. */
+export async function chatAboutAnalysis(params: {
+  postingText: string;
+  analysis: JobAnalysisJson;
+  profile: CandidateProfileJson | null;
+  history: ChatTurn[];
+  question: string;
+}): Promise<string> {
+  const { postingText, analysis, profile, history, question } = params;
+
+  const profileBlock = profile
+    ? JSON.stringify(profile, null, 2)
+    : "(No candidate profile available.)";
+
+  const system = `You are an expert career coach and technical recruiter helping a candidate think through a specific job posting they've already had analyzed. Answer their follow-up questions directly and specifically, grounded in the posting text, your prior analysis, and their candidate profile below. Keep answers conversational and concise (a few sentences to a short paragraph, use brief lists only when genuinely helpful) — this is a chat, not a report. If something isn't stated in the posting or profile, say so rather than guessing.
+
+Candidate profile:
+${profileBlock}
+
+Job posting text:
+${postingText}
+
+Your prior structured analysis of this posting:
+${JSON.stringify(analysis, null, 2)}`;
+
+  return askClaudeConversation({
+    system,
+    messages: [...history, { role: "user", content: question }],
+    maxTokens: 1024,
+  });
 }

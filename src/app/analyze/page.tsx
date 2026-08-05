@@ -8,6 +8,12 @@ type AnalyzeResult = {
   analysis: JobAnalysisJson;
 };
 
+type ChatMessage = {
+  id: number | string;
+  role: "user" | "assistant";
+  content: string;
+};
+
 export default function AnalyzePage() {
   const [url, setUrl] = useState("");
   const [pastedText, setPastedText] = useState("");
@@ -21,12 +27,15 @@ export default function AnalyzePage() {
   const [applied, setApplied] = useState(false);
   const [applyError, setApplyError] = useState<string | null>(null);
 
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+
   async function runAnalysis() {
     setLoading(true);
     setError(null);
     setResult(null);
     setApplied(false);
     setShowApplyForm(false);
+    setChatMessages([]);
     try {
       const res = await fetch("/api/analyze", {
         method: "POST",
@@ -223,7 +232,108 @@ export default function AnalyzePage() {
           </div>
         </section>
       )}
+
+      {result && (
+        <AnalysisChat jobAnalysisId={result.jobAnalysis.id} messages={chatMessages} setMessages={setChatMessages} />
+      )}
     </div>
+  );
+}
+
+function AnalysisChat({
+  jobAnalysisId,
+  messages,
+  setMessages,
+}: {
+  jobAnalysisId: number;
+  messages: ChatMessage[];
+  setMessages: (updater: ChatMessage[] | ((prev: ChatMessage[]) => ChatMessage[])) => void;
+}) {
+  const [question, setQuestion] = useState("");
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function sendQuestion() {
+    const trimmed = question.trim();
+    if (!trimmed || sending) return;
+
+    const tempId = `pending-${Date.now()}`;
+    setMessages((prev) => [...prev, { id: tempId, role: "user", content: trimmed }]);
+    setQuestion("");
+    setSending(true);
+    setError(null);
+
+    try {
+      const res = await fetch(`/api/analyze/${jobAnalysisId}/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: trimmed }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to get a response");
+      setMessages((prev) => [
+        ...prev.filter((m) => m.id !== tempId),
+        { id: data.userMessage.id, role: "user", content: data.userMessage.content },
+        { id: data.assistantMessage.id, role: "assistant", content: data.assistantMessage.content },
+      ]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to get a response");
+      setMessages((prev) => prev.filter((m) => m.id !== tempId));
+      setQuestion(trimmed);
+    } finally {
+      setSending(false);
+    }
+  }
+
+  return (
+    <section className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-5 flex flex-col gap-4">
+      <div>
+        <h2 className="font-medium">Ask about this role</h2>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+          Follow-up questions grounded in this posting and your profile — e.g. &quot;how should I
+          negotiate the comp?&quot; or &quot;is the on-call requirement a dealbreaker for me?&quot;
+        </p>
+      </div>
+
+      {messages.length > 0 && (
+        <div className="flex flex-col gap-3">
+          {messages.map((m) => (
+            <div
+              key={m.id}
+              className={`max-w-[85%] rounded-lg px-3 py-2 text-sm whitespace-pre-wrap ${
+                m.role === "user"
+                  ? "self-end bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
+                  : "self-start bg-zinc-100 dark:bg-zinc-900"
+              }`}
+            >
+              {m.content}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") sendQuestion();
+          }}
+          placeholder="Ask a question about this role…"
+          disabled={sending}
+          className="flex-1 rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent p-2 text-sm"
+        />
+        <button
+          onClick={sendQuestion}
+          disabled={sending || !question.trim()}
+          className="rounded-md bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 px-4 py-2 text-sm font-medium disabled:opacity-50"
+        >
+          {sending ? "…" : "Send"}
+        </button>
+      </div>
+      {error && <p className="text-sm text-red-600">{error}</p>}
+    </section>
   );
 }
 
