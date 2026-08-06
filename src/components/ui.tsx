@@ -96,7 +96,7 @@ export function Card({ children, className }: { children: ReactNode; className?:
   return (
     <section
       className={twMerge(
-        "rounded-2xl border border-sage-200/70 dark:border-sage-900 bg-white dark:bg-sage-950/40 p-4 sm:p-5",
+        "rounded-2xl border border-sage-200 dark:border-sage-900 bg-sage-50 dark:bg-sage-950/40 p-4 sm:p-5",
         className
       )}
     >
