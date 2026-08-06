@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { INTERVIEW_QUESTIONS } from "@/lib/interviewQuestions";
+import { statusColor } from "@/lib/statusColor";
 
 export const dynamic = "force-dynamic";
 
@@ -57,7 +58,7 @@ export default async function Home() {
       </div>
 
       {!hasSynthesizedProfile && (
-        <div className="rounded-2xl border border-amber-300 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/40 p-4 text-sm text-amber-900 dark:text-amber-200">
+        <div className="rounded-2xl border border-amber-300/70 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/40 p-4 text-sm text-amber-900 dark:text-amber-200">
           Upload your resume and answer a few interview questions on the{" "}
           <Link href="/profile" className="underline font-medium">
             My Profile
@@ -69,7 +70,7 @@ export default async function Home() {
       <div>
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-medium">Recent applications</h2>
-          <Link href="/tracker" className="text-sm text-zinc-500 hover:underline">
+          <Link href="/tracker" className="text-sm text-sage-700 dark:text-sage-400 underline">
             View all
           </Link>
         </div>
@@ -78,9 +79,9 @@ export default async function Home() {
             Nothing tracked yet. Analyze a posting or add one manually to get started.
           </p>
         ) : (
-          <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 divide-y divide-zinc-200 dark:divide-zinc-800 overflow-hidden">
+          <div className="rounded-2xl border border-sage-200/70 dark:border-sage-900 divide-y divide-sage-200/70 dark:divide-sage-900 overflow-hidden">
             {applications.map((app) => (
-              <div key={app.id} className="flex items-center justify-between gap-3 px-4 py-3 text-sm">
+              <div key={app.id} className="flex items-center justify-between gap-3 px-4 py-3 text-sm bg-white dark:bg-sage-950/40">
                 <div className="min-w-0">
                   <div className="font-medium truncate">
                     {app.position} @ {app.company}
@@ -89,7 +90,7 @@ export default async function Home() {
                     {new Date(app.dateApplied).toLocaleDateString()}
                   </div>
                 </div>
-                <span className="shrink-0 rounded-full bg-zinc-100 dark:bg-zinc-800 px-3 py-1 text-xs font-medium">
+                <span className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${statusColor(app.status)}`}>
                   {app.status}
                 </span>
               </div>
@@ -105,12 +106,12 @@ function Card(props: { title: string; value: string; detail: string; href: strin
   return (
     <Link
       href={props.href}
-      className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-4 flex flex-col gap-1 active:bg-zinc-50 dark:active:bg-zinc-900 transition-colors min-h-11"
+      className="rounded-2xl border border-sage-200/70 dark:border-sage-900 bg-white dark:bg-sage-950/40 p-4 flex flex-col gap-1 active:bg-sage-50 dark:active:bg-sage-900/40 transition-colors min-h-11"
     >
-      <span className="text-xs uppercase tracking-wide text-zinc-500">{props.title}</span>
+      <span className="text-xs uppercase tracking-wide text-sage-600 dark:text-sage-500">{props.title}</span>
       <span className="text-xl font-semibold break-words">{props.value}</span>
       <span className="text-xs text-zinc-500 dark:text-zinc-400 break-words">{props.detail}</span>
-      <span className="text-sm text-zinc-900 dark:text-zinc-100 font-medium mt-2">
+      <span className="text-sm text-sage-700 dark:text-sage-400 font-medium mt-2">
         {props.cta} →
       </span>
     </Link>

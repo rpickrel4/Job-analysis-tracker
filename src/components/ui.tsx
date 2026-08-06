@@ -13,7 +13,7 @@ import { twMerge } from "tailwind-merge";
 // position in the class string.
 
 const inputBase =
-  "w-full rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3.5 py-2.5 text-base placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 min-h-11";
+  "w-full rounded-xl border border-sage-200 dark:border-sage-800 bg-white dark:bg-sage-950/40 px-3.5 py-2.5 text-base placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-sage-500 dark:focus:ring-sage-400 min-h-11";
 
 export function Label({ children }: { children: ReactNode }) {
   return <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 block mb-1.5">{children}</label>;
@@ -59,12 +59,12 @@ export function Select(props: SelectHTMLAttributes<HTMLSelectElement>) {
 type ButtonVariant = "primary" | "secondary" | "success" | "danger" | "ghost";
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary: "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 active:opacity-80",
+  primary: "bg-sage-600 text-white dark:bg-sage-500 active:bg-sage-700 dark:active:bg-sage-600",
   secondary:
-    "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100 border border-zinc-200 dark:border-zinc-700 active:opacity-80",
-  success: "bg-emerald-600 text-white active:opacity-80",
-  danger: "bg-red-600 text-white active:opacity-80",
-  ghost: "text-zinc-600 dark:text-zinc-400 active:opacity-60",
+    "bg-sage-50 text-sage-900 dark:bg-sage-900/50 dark:text-sage-100 border border-sage-200 dark:border-sage-800 active:bg-sage-100 dark:active:bg-sage-900",
+  success: "bg-sage-700 text-white dark:bg-sage-600 active:bg-sage-800 dark:active:bg-sage-700",
+  danger: "bg-clay-600 text-white active:bg-clay-700",
+  ghost: "text-sage-700 dark:text-sage-400 active:opacity-60",
 };
 
 export function Button({
@@ -96,7 +96,7 @@ export function Card({ children, className }: { children: ReactNode; className?:
   return (
     <section
       className={twMerge(
-        "rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-4 sm:p-5",
+        "rounded-2xl border border-sage-200/70 dark:border-sage-900 bg-white dark:bg-sage-950/40 p-4 sm:p-5",
         className
       )}
     >

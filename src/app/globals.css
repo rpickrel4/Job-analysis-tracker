@@ -1,21 +1,48 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f8f5;
+  --foreground: #1c211d;
 }
 
+/* Muted sage green — the brand/primary color — paired with a soft clay
+   terracotta for negative states. Both desaturated on purpose so they read
+   as calm rather than loud. */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --color-sage-50: #f3f6f2;
+  --color-sage-100: #e4ebe1;
+  --color-sage-200: #c9d7c4;
+  --color-sage-300: #a7bc9f;
+  --color-sage-400: #85a17b;
+  --color-sage-500: #67865c;
+  --color-sage-600: #506b48;
+  --color-sage-700: #40563a;
+  --color-sage-800: #34452f;
+  --color-sage-900: #2b3827;
+  --color-sage-950: #161e14;
+
+  --color-clay-50: #faf3f0;
+  --color-clay-100: #f3e1da;
+  --color-clay-200: #e4bfb0;
+  --color-clay-300: #d29a85;
+  --color-clay-400: #bf7b60;
+  --color-clay-500: #ac6247;
+  --color-clay-600: #8f4d35;
+  --color-clay-700: #753e2b;
+  --color-clay-800: #603325;
+  --color-clay-900: #4f2b20;
+  --color-clay-950: #2a1510;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #12160f;
+    --foreground: #e9ede5;
   }
 }
 
@@ -28,4 +55,9 @@ body {
 
 * {
   -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: var(--color-sage-200);
+  color: var(--color-sage-900);
 }

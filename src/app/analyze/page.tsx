@@ -140,7 +140,7 @@ export default function AnalyzePage() {
           <button
             type="button"
             onClick={() => setShowPasteBox(true)}
-            className="text-sm text-zinc-500 underline self-start min-h-11 flex items-center"
+            className="text-sm text-sage-700 dark:text-sage-400 underline self-start min-h-11 flex items-center"
           >
             + Paste description text instead / as well
           </button>
@@ -165,7 +165,7 @@ export default function AnalyzePage() {
         >
           {loading ? "Analyzing…" : "Analyze"}
         </Button>
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-clay-700 dark:text-clay-400">{error}</p>}
       </Card>
 
       {analysis && (
@@ -211,9 +211,9 @@ export default function AnalyzePage() {
             <ListSection title="Required qualifications" items={analysis.position.requiredQualifications} />
           </div>
 
-          <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800">
+          <div className="pt-2 border-t border-sage-200/70 dark:border-sage-900">
             {applied ? (
-              <p className="text-sm text-green-600 font-medium">
+              <p className="text-sm text-sage-700 dark:text-sage-400 font-medium">
                 ✓ Added to your application tracker.
               </p>
             ) : showApplyForm ? (
@@ -303,8 +303,8 @@ function AnalysisChat({
               key={m.id}
               className={`max-w-[88%] sm:max-w-[75%] rounded-2xl px-3.5 py-2.5 text-sm whitespace-pre-wrap break-words ${
                 m.role === "user"
-                  ? "self-end bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                  : "self-start bg-zinc-100 dark:bg-zinc-900"
+                  ? "self-end bg-sage-700 text-white dark:bg-sage-600"
+                  : "self-start bg-sage-50 dark:bg-sage-900/50"
               }`}
             >
               {m.content}
@@ -329,7 +329,7 @@ function AnalysisChat({
           {sending ? "…" : "Send"}
         </Button>
       </div>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-clay-700 dark:text-clay-400">{error}</p>}
     </Card>
   );
 }
@@ -337,10 +337,10 @@ function AnalysisChat({
 function FitScore({ score, verdict }: { score: number; verdict: string }) {
   const color =
     score >= 75
-      ? "text-emerald-600 border-emerald-300"
+      ? "text-sage-700 dark:text-sage-400 border-sage-300 dark:border-sage-700"
       : score >= 50
-      ? "text-amber-600 border-amber-300"
-      : "text-red-600 border-red-300";
+      ? "text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-800"
+      : "text-clay-700 dark:text-clay-400 border-clay-300 dark:border-clay-800";
   return (
     <div className={`flex flex-row sm:flex-col items-center justify-center gap-2 sm:gap-0 rounded-xl border ${color} px-4 py-2 shrink-0 self-start`}>
       <span className="text-2xl font-bold">{score}</span>
@@ -351,7 +351,7 @@ function FitScore({ score, verdict }: { score: number; verdict: string }) {
 
 function InfoTile({ label, value }: { label: string; value: string | null }) {
   return (
-    <div className="rounded-xl bg-zinc-50 dark:bg-zinc-900 p-2.5 min-w-0">
+    <div className="rounded-xl bg-sage-50 dark:bg-sage-900/40 p-2.5 min-w-0">
       <div className="text-[11px] uppercase text-zinc-500">{label}</div>
       <div className="break-words">{value || "—"}</div>
     </div>
@@ -368,7 +368,7 @@ function ListSection({
   tone?: "positive" | "negative";
 }) {
   if (!items || items.length === 0) return null;
-  const dot = tone === "positive" ? "text-emerald-500" : tone === "negative" ? "text-red-500" : "text-zinc-400";
+  const dot = tone === "positive" ? "text-sage-500" : tone === "negative" ? "text-clay-500" : "text-zinc-400";
   return (
     <div className="min-w-0">
       <h3 className="text-sm font-semibold mb-1">{title}</h3>
@@ -445,7 +445,7 @@ function ApplyForm({
           Cancel
         </button>
       </div>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-clay-700 dark:text-clay-400">{error}</p>}
     </div>
   );
 }

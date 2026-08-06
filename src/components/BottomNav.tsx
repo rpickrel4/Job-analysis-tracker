@@ -16,7 +16,7 @@ export default function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 inset-x-0 z-20 bg-white/95 dark:bg-zinc-950/95 backdrop-blur border-t border-zinc-200 dark:border-zinc-800 pb-[env(safe-area-inset-bottom)]"
+      className="fixed bottom-0 inset-x-0 z-20 bg-sage-50/95 dark:bg-sage-950/95 backdrop-blur border-t border-sage-200 dark:border-sage-900 pb-[env(safe-area-inset-bottom)]"
       aria-label="Primary"
     >
       <div className="max-w-6xl mx-auto grid grid-cols-4">
@@ -31,13 +31,13 @@ export default function BottomNav() {
             >
               <Icon
                 className={`h-6 w-6 ${
-                  active ? "text-zinc-900 dark:text-zinc-100" : "text-zinc-400 dark:text-zinc-600"
+                  active ? "text-sage-600 dark:text-sage-400" : "text-zinc-400 dark:text-zinc-600"
                 }`}
               />
               <span
                 className={`text-[11px] leading-none ${
                   active
-                    ? "text-zinc-900 dark:text-zinc-100 font-medium"
+                    ? "text-sage-700 dark:text-sage-400 font-medium"
                     : "text-zinc-400 dark:text-zinc-600"
                 }`}
               >

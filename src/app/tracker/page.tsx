@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { Button, Card, Field, Select, TextArea, TextInput } from "@/components/ui";
+import { statusColor } from "@/lib/statusColor";
 
 const STATUS_OPTIONS = [
   "Applied",
@@ -177,7 +178,7 @@ export default function TrackerPage() {
               <TextArea value={form.notes} onChange={(e) => setField("notes", e.target.value)} className="min-h-16" />
             </Field>
           </div>
-          {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
+          {error && <p className="text-sm text-clay-700 dark:text-clay-400 mt-2">{error}</p>}
           <Button onClick={submitAdd} disabled={saving} fullWidth className="mt-3 sm:w-auto">
             {saving ? "Saving…" : "Save application"}
           </Button>
@@ -231,7 +232,7 @@ function ApplicationCard({
         <Select
           value={app.status}
           onChange={(e) => onStatusChange(e.target.value)}
-          className="w-auto shrink-0 py-2 text-sm min-h-9"
+          className={`w-auto shrink-0 py-2 text-sm min-h-9 border-transparent font-medium ${statusColor(app.status)}`}
         >
           {STATUS_OPTIONS.map((s) => (
             <option key={s} value={s}>
@@ -248,7 +249,7 @@ function ApplicationCard({
       </div>
 
       {expanded && (
-        <div className="flex flex-col gap-2 text-sm pt-2 border-t border-zinc-200 dark:border-zinc-800">
+        <div className="flex flex-col gap-2 text-sm pt-2 border-t border-sage-200/70 dark:border-sage-900">
           {app.location && (
             <div>
               <span className="font-medium">Location: </span>
@@ -262,7 +263,7 @@ function ApplicationCard({
                 href={app.postingLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 underline"
+                className="text-sage-700 dark:text-sage-400 underline"
               >
                 {app.postingLink}
               </a>
@@ -287,10 +288,10 @@ function ApplicationCard({
       )}
 
       <div className="flex gap-4 pt-1">
-        <button onClick={onToggleExpand} className="text-sm text-zinc-500 underline min-h-9">
+        <button onClick={onToggleExpand} className="text-sm text-sage-700 dark:text-sage-400 underline min-h-9">
           {expanded ? "Hide details" : "Details"}
         </button>
-        <button onClick={onDelete} className="text-sm text-red-600 underline min-h-9">
+        <button onClick={onDelete} className="text-sm text-clay-700 dark:text-clay-400 underline min-h-9">
           Delete
         </button>
       </div>

@@ -107,7 +107,7 @@ export default function ProfilePage() {
           PDF, DOCX, or TXT. We extract the text and use it alongside your interview answers.
         </p>
         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-          <label className="cursor-pointer inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 min-h-11 text-base font-medium bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 active:opacity-80">
+          <label className="cursor-pointer inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 min-h-11 text-base font-medium bg-sage-600 text-white dark:bg-sage-500 active:bg-sage-700 dark:active:bg-sage-600">
             {resumeUploading ? "Uploading…" : resumeFileName ? "Replace resume" : "Upload resume"}
             <input
               type="file"
@@ -121,13 +121,19 @@ export default function ProfilePage() {
             <span className="text-sm text-zinc-500 dark:text-zinc-400 break-all">{resumeFileName}</span>
           )}
         </div>
-        {resumeError && <p className="text-sm text-red-600 mt-2">{resumeError}</p>}
+        {resumeError && <p className="text-sm text-clay-700 dark:text-clay-400 mt-2">{resumeError}</p>}
       </Card>
 
       <Card>
         <div className="flex items-center justify-between mb-4 gap-3">
           <h2 className="font-medium">Interview</h2>
-          <span className="text-sm text-zinc-500 shrink-0">
+          <span
+            className={`text-sm shrink-0 ${
+              answeredCount === questions.length && questions.length > 0
+                ? "text-sage-700 dark:text-sage-400 font-medium"
+                : "text-zinc-500"
+            }`}
+          >
             {answeredCount}/{questions.length} answered
           </span>
         </div>
@@ -181,7 +187,7 @@ export default function ProfilePage() {
           Uses AI to combine your resume and interview answers into the profile used for job fit
           analysis. Rebuild anytime after adding more answers.
         </p>
-        {synthesizeError && <p className="text-sm text-red-600 mb-3">{synthesizeError}</p>}
+        {synthesizeError && <p className="text-sm text-clay-700 dark:text-clay-400 mb-3">{synthesizeError}</p>}
         {profileJson ? (
           <div className="flex flex-col gap-3 text-sm">
             <p>{profileJson.summary}</p>
