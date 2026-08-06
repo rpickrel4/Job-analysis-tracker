@@ -1,4 +1,4 @@
-# Job Hunt Copilot
+# Sage — Job Hunt Copilot
 
 A personal job-hunting app: build a profile of yourself (resume + interview),
 paste in job postings to get an AI fit analysis, and track every application

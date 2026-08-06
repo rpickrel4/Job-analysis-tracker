@@ -59,11 +59,13 @@ export function Select(props: SelectHTMLAttributes<HTMLSelectElement>) {
 type ButtonVariant = "primary" | "secondary" | "success" | "danger" | "ghost";
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary: "bg-sage-600 text-white dark:bg-sage-500 active:bg-sage-700 dark:active:bg-sage-600",
+  primary:
+    "bg-sage-600 text-white dark:bg-sage-500 active:bg-sage-700 dark:active:bg-sage-600 shadow-sm shadow-sage-900/20",
   secondary:
     "bg-sage-50 text-sage-900 dark:bg-sage-900/50 dark:text-sage-100 border border-sage-200 dark:border-sage-800 active:bg-sage-100 dark:active:bg-sage-900",
-  success: "bg-sage-700 text-white dark:bg-sage-600 active:bg-sage-800 dark:active:bg-sage-700",
-  danger: "bg-clay-600 text-white active:bg-clay-700",
+  success:
+    "bg-sage-700 text-white dark:bg-sage-600 active:bg-sage-800 dark:active:bg-sage-700 shadow-sm shadow-sage-900/20",
+  danger: "bg-clay-600 text-white active:bg-clay-700 shadow-sm shadow-clay-900/20",
   ghost: "text-sage-700 dark:text-sage-400 active:opacity-60",
 };
 
@@ -96,7 +98,7 @@ export function Card({ children, className }: { children: ReactNode; className?:
   return (
     <section
       className={twMerge(
-        "rounded-2xl border border-sage-200 dark:border-sage-900 bg-sage-50 dark:bg-sage-950/40 p-4 sm:p-5",
+        "rounded-2xl border border-sage-200 dark:border-sage-900 bg-sage-50 dark:bg-sage-950/40 p-4 sm:p-5 shadow-sm shadow-sage-900/[0.06] dark:shadow-black/20",
         className
       )}
     >

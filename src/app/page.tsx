@@ -79,7 +79,7 @@ export default async function Home() {
             Nothing tracked yet. Analyze a posting or add one manually to get started.
           </p>
         ) : (
-          <div className="rounded-2xl border border-sage-200 dark:border-sage-900 divide-y divide-sage-200 dark:divide-sage-900 overflow-hidden">
+          <div className="rounded-2xl border border-sage-200 dark:border-sage-900 divide-y divide-sage-200 dark:divide-sage-900 overflow-hidden shadow-sm shadow-sage-900/[0.06] dark:shadow-black/20">
             {applications.map((app) => (
               <div key={app.id} className="flex items-center justify-between gap-3 px-4 py-3 text-sm bg-sage-50 dark:bg-sage-950/40">
                 <div className="min-w-0">
@@ -106,7 +106,7 @@ function Card(props: { title: string; value: string; detail: string; href: strin
   return (
     <Link
       href={props.href}
-      className="rounded-2xl border border-sage-200 dark:border-sage-900 bg-sage-50 dark:bg-sage-950/40 p-4 flex flex-col gap-1 active:bg-sage-100 dark:active:bg-sage-900/40 transition-colors min-h-11"
+      className="rounded-2xl border border-sage-200 dark:border-sage-900 bg-sage-50 dark:bg-sage-950/40 p-4 flex flex-col gap-1 active:bg-sage-100 dark:active:bg-sage-900/40 transition-colors min-h-11 shadow-sm shadow-sage-900/[0.06] dark:shadow-black/20"
     >
       <span className="text-xs uppercase tracking-wide text-sage-600 dark:text-sage-500">{props.title}</span>
       <span className="text-xl font-semibold break-words">{props.value}</span>

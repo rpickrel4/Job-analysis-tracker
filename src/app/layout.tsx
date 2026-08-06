@@ -15,9 +15,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Job Hunt Copilot",
+  title: "Sage — Job Hunt Copilot",
   description:
     "Analyze job postings against your profile, and track everything you've applied to.",
+  appleWebApp: {
+    title: "Sage",
+    statusBarStyle: "default",
+  },
 };
 
 // viewportFit: "cover" lets the page extend under the iPhone's notch/home
@@ -27,6 +31,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  themeColor: "#34452f",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

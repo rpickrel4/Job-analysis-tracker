@@ -16,7 +16,7 @@ export default function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 inset-x-0 z-20 bg-sage-50/95 dark:bg-sage-950/95 backdrop-blur border-t border-sage-200 dark:border-sage-900 pb-[env(safe-area-inset-bottom)]"
+      className="fixed bottom-0 inset-x-0 z-20 bg-sage-50/95 dark:bg-sage-950/95 backdrop-blur border-t border-sage-200 dark:border-sage-900 pb-[env(safe-area-inset-bottom)] shadow-[0_-2px_8px_rgba(0,0,0,0.04)]"
       aria-label="Primary"
     >
       <div className="max-w-6xl mx-auto grid grid-cols-4">
