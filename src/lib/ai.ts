@@ -89,10 +89,25 @@ Respond with ONLY a JSON object matching this exact shape (no markdown fences, n
     system:
       "You are an expert career coach and technical recruiter. You give honest, specific, non-generic analysis grounded only in the provided posting and candidate profile. You always respond with strict JSON only.",
     prompt,
-    maxTokens: 4096,
+    maxTokens: 8000,
   });
 
-  return extractJson<JobAnalysisJson>(response);
+  const analysis = extractJson<JobAnalysisJson>(response);
+
+  if (
+    !analysis ||
+    typeof analysis !== "object" ||
+    !analysis.company ||
+    !analysis.position ||
+    !analysis.fit ||
+    typeof analysis.fit.score !== "number"
+  ) {
+    throw new Error(
+      "The analysis came back in an unexpected format — this can happen when the fetched page wasn't actually the job posting (e.g. a login wall). Try pasting the description text directly."
+    );
+  }
+
+  return analysis;
 }
 
 /** Answers a free-form follow-up question about an already-analyzed posting. */
