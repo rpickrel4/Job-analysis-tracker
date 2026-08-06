@@ -44,6 +44,7 @@ const EMPTY_FORM = {
 export default function TrackerPage() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
@@ -51,10 +52,17 @@ export default function TrackerPage() {
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const load = useCallback(async () => {
-    const res = await fetch("/api/applications");
-    const data = await res.json();
-    setApplications(data.applications);
-    setLoading(false);
+    setLoading(true);
+    setLoadError(null);
+    try {
+      const res = await fetch("/api/applications");
+      const data = await res.json();
+      setApplications(data.applications);
+    } catch {
+      setLoadError("Couldn't load your applications. Check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -187,6 +195,13 @@ export default function TrackerPage() {
 
       {loading ? (
         <p className="text-sm text-zinc-500">Loading…</p>
+      ) : loadError ? (
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-sm text-clay-700 dark:text-clay-400">{loadError}</p>
+          <Button variant="secondary" onClick={load}>
+            Retry
+          </Button>
+        </div>
       ) : applications.length === 0 ? (
         <p className="text-sm text-zinc-500">
           No applications tracked yet. Analyze a posting or add one manually.

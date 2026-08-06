@@ -14,6 +14,7 @@ export default function ProfilePage() {
 
   const [questions, setQuestions] = useState<QuestionWithAnswer[]>([]);
   const [loadingQuestions, setLoadingQuestions] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [savingId, setSavingId] = useState<string | null>(null);
 
   const [profileJson, setProfileJson] = useState<CandidateProfileJson | null>(null);
@@ -21,16 +22,23 @@ export default function ProfilePage() {
   const [synthesizeError, setSynthesizeError] = useState<string | null>(null);
 
   const loadAll = useCallback(async () => {
-    const [profileRes, interviewRes] = await Promise.all([
-      fetch("/api/profile").then((r) => r.json()),
-      fetch("/api/interview").then((r) => r.json()),
-    ]);
-    setResumeFileName(profileRes.profile?.resumeFileName ?? null);
-    if (profileRes.profile?.profileJson) {
-      setProfileJson(JSON.parse(profileRes.profile.profileJson));
+    setLoadingQuestions(true);
+    setLoadError(null);
+    try {
+      const [profileRes, interviewRes] = await Promise.all([
+        fetch("/api/profile").then((r) => r.json()),
+        fetch("/api/interview").then((r) => r.json()),
+      ]);
+      setResumeFileName(profileRes.profile?.resumeFileName ?? null);
+      if (profileRes.profile?.profileJson) {
+        setProfileJson(JSON.parse(profileRes.profile.profileJson));
+      }
+      setQuestions(interviewRes.questions);
+    } catch {
+      setLoadError("Couldn't load your profile. Check your connection and try again.");
+    } finally {
+      setLoadingQuestions(false);
     }
-    setQuestions(interviewRes.questions);
-    setLoadingQuestions(false);
   }, []);
 
   useEffect(() => {
@@ -140,6 +148,13 @@ export default function ProfilePage() {
 
         {loadingQuestions ? (
           <p className="text-sm text-zinc-500">Loading…</p>
+        ) : loadError ? (
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm text-clay-700 dark:text-clay-400">{loadError}</p>
+            <Button variant="secondary" onClick={loadAll}>
+              Retry
+            </Button>
+          </div>
         ) : (
           <div className="flex flex-col gap-8">
             {INTERVIEW_CATEGORIES.map((category) => {
